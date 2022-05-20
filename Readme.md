@@ -1,3 +1,10 @@
+## Setup
+
+```
+npm i
+node index.js
+```
+
 ## Documentation Used 
 
 [Access Tokens on Github](https://docs.github.com/en/developers/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps#2-users-are-redirected-back-to-your-site-by-github)
