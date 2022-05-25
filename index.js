@@ -10,10 +10,10 @@ const PORT = 4000;
 let page_url = 'https://tribes.spect.network';
 const redirect_url = 'http://localhost:4000/probot'; // URL which is given as Callback URL - Github App settings
 
-let accessToken, data, tribe_id, user_url;
-let repo_array = [];
-
 app.get('/probot', function(req, res){
+
+    let accessToken, data, tribe_id, user_url;
+    let repo_array = [];
 
     const code = req.query.code;
     const installation_id = req.query.installation_id;
