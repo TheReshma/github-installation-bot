@@ -6,7 +6,7 @@ const client_id = process.env.CLIENT_ID;
 const client_secret = process.env.CLIENT_SECRET;
 const server_url = process.env.MORALIS_SERVER_ID;
 const app_id = process.env.MORALIS_APPLICATION_ID;
-const PORT = 4000;
+const PORT = 8080;
 let page_url = 'https://tribes.spect.network';
 const redirect_url = 'http://localhost:4000/probot'; // URL which is given as Callback URL - Github App settings
 
@@ -97,6 +97,57 @@ app.get('/probot', function(req, res){
     }
 })
 
-app.listen(PORT, function(){
-   console.log("Yay, server is running.......");
+app.get('/callback', function(req,res){
+
+    const client_id = process.env.AUTH_CLIENT_ID;
+    const client_secret = process.env.AUTH_CLIENT_SECRET;
+    const code = req.query.code;
+    const state = req.query.state;
+
+    let data, accessToken, githubId;
+
+    console.log(code, state);
+
+    linkGitHubUser();
+
+    async function getUserAccessToken(){
+        var config = {
+            method: 'post',
+            url: `https://github.com/login/oauth/access_token?client_id=${client_id}&client_secret=${client_secret}&code=${code}&redirect_uri=http://localhost:3000/`
+        };
+        await axios(config)
+        .then(function (response) {
+            data = response.data;
+            accessToken = ((data.split('&',3))[0].split('=',2))[1];
+            console.log(accessToken);
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+    }
+
+    async function getUserId(){
+        var config = {
+            method: 'get',
+            url: `https://api.github.com/user`,
+            headers: { 'Authorization': `Bearer ` + `${accessToken}` }
+        };
+        await axios(config)
+        .then(function (response) {
+            console.log(response.data.login);
+            githubId = response.data.login;
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+    }
+
+    async function linkGitHubUser(){
+        await getUserAccessToken();
+        await getUserId();
+        res.status(200).json({github : githubId});
+    }
 })
+
+app.listen(process.env.PORT || 8080, 
+	() => console.log("Server is running..."));
