@@ -102,7 +102,6 @@ app.get('/callback', function(req,res){
     const client_id = process.env.AUTH_CLIENT_ID;
     const client_secret = process.env.AUTH_CLIENT_SECRET;
     const code = req.query.code;
-    const state = req.query.state;
 
     let data, accessToken, githubId;
 
@@ -145,7 +144,7 @@ app.get('/callback', function(req,res){
     async function linkGitHubUser(){
         await getUserAccessToken();
         await getUserId();
-        res.status(200).json({github : githubId});
+        res.status(200).json({ github : githubId });
     }
 })
 
