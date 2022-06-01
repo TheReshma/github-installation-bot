@@ -105,7 +105,7 @@ app.get('/callback', function(req,res){
 
     let data, accessToken, githubId;
 
-    console.log(code, state);
+    console.log(code);
 
     linkGitHubUser();
 
